@@ -1,6 +1,6 @@
 import unittest
 
-from dungeon_env import Action, DungeonConfig, DungeonEnv
+from dungeon_env import Action, DungeonConfig, DungeonEnv, Observation
 
 
 class DungeonEnvironmentTests(unittest.TestCase):
@@ -63,3 +63,23 @@ class QLearningTests(unittest.TestCase):
         values = agent._values(observation)
         values[Action.DOWN] = 4.0
         self.assertEqual(agent.choose_action(observation), Action.DOWN)
+
+
+class StateAndRewardTests(unittest.TestCase):
+    def test_visit_memory_changes_the_q_state(self) -> None:
+        tiles = {(0, 0): "A", (0, 1): "."}
+        unseen = Observation(tiles=tiles, visited_offsets=frozenset({(0, 0)}), enemy_visible=False)
+        seen = Observation(tiles=tiles, visited_offsets=frozenset({(0, 0), (0, 1)}), enemy_visible=False)
+        self.assertNotEqual(unseen.q_key(), seen.q_key())
+
+    def test_spotting_visible_treasure_adds_shaping_reward(self) -> None:
+        config = DungeonConfig(
+            rows=3, cols=5, start=(1, 0), treasure=(1, 3), enemy_start=(2, 4),
+            walls=frozenset(), traps=frozenset(), enemy_proximity_penalty=0.0,
+        )
+        env = DungeonEnv(config)
+        env.reset(seed=1)
+        _, reward, terminated, _, info = env.step(Action.RIGHT)
+        self.assertFalse(terminated)
+        self.assertAlmostEqual(reward, 0.6)  # -0.1 step + 0.2 new tile + 0.5 spotted
+        self.assertEqual(info["reward_terms"]["treasure_spotted"], 0.5)
