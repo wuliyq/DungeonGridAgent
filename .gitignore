@@ -2,13 +2,6 @@ __pycache__/
 *.py[cod]
 .DS_Store
 .venv/
-
 node_modules/
 .build/
-
-node_modules/
-.build/
-
 .chart-data-*/
-node_modules
-.build/
