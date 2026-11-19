@@ -13,6 +13,7 @@ This project has no third-party Python dependencies. Clone the repository, then 
 python3 -m unittest discover -s tests -v
 python3 run_demo.py --episodes 100
 python3 run_demo.py --show --episodes 1
+python3 demo_q_learning.py
 python3 train_q_learning.py --episodes 15000 --evaluate-episodes 1000
 ```
 

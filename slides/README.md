@@ -13,7 +13,7 @@ Suggested timing:
 Run the live demo from the repository root:
 
 ```bash
-python3 run_demo.py --show --episodes 1
+python3 demo_q_learning.py
 ```
 
 The evaluation slide reports a preliminary single-seed result. Do not describe it as the final experiment.
